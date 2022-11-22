@@ -1,0 +1,42 @@
+.place-list-wrapper {
+	position: absolute;
+	z-index: 999;
+	background: white;
+	top: 56px;
+	left: 53px;
+	width: 364.4px;
+	box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.item-wrapper {
+  overflow: auto;
+  max-height: 200px;
+  margin: 4px;
+}
+
+.list-item {
+	display: flex;
+	padding: 8px;
+  padding: 12px;
+} 
+
+strong {
+	margin: 0px;
+	font-weight: bold;
+	font-size: 14px;
+  color: #434d5a;
+  width: 234px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  text-align: left;
+}
+
+.place-list-wrapper span {
+	margin: 0px;
+	margin-left: 12px;
+	font-size: 14px;
+	color: #606060;
+  font-weight: normal;
+}
