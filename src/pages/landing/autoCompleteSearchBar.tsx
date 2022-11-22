@@ -4,17 +4,19 @@ import SearchBar from "../../components/searchBar";
 import API from "../../services/apiService";
 
 interface PropTypes {
-  onClickPlace?: (place: Place) => void;
+  onClickPlace?: (place: Place, isCurrent: boolean) => void;
+  currentSearch: Place[];
 }
+let isCurrent;
 
 const AutoCompleteSearchBar = (props: PropTypes) => {
   const inputStyle = { position: 'absolute', top: '8px', left: '52px', zIndex: '999' };
   const [isFetch, setIsFetch] = useState(false);
   const [placeList, setPlaceList] = useState([]);
+  const [keyword, setKeyword] = useState('');
 
-  const onClickSearch = (keyword) => {
-    setIsFetch(true);
-    const link = `https://api.locationiq.com/v1/autocomplete?key=pk.9b254bf7cb5be233afb04532d9b825b8&q=${keyword}`;
+  const fetch = (query) => {
+    const link = `https://api.locationiq.com/v1/autocomplete?key=pk.9b254bf7cb5be233afb04532d9b825b8&q=${query}`;
     API.get(link).then(res => {
       const result = [];
       if (res.status === 200) {
@@ -38,15 +40,41 @@ const AutoCompleteSearchBar = (props: PropTypes) => {
     });
   }
 
+  const onClickSearch = () => {
+    setIsFetch(true);
+    fetch(keyword);
+  }
+
+  const debounceSearch = (e) => {
+    if (!isCurrent) {
+      fetch(e.target.value);
+    }
+  }
+
+  const onChange = (e) => {
+    setKeyword(e.target.value);
+    if (!e.target.value) {
+      setPlaceList([...props.currentSearch]);
+    }
+    isCurrent = !e.target.value ? true : false;
+  }
+
   const toogleClickPlace = (place) => {
+    setKeyword(place.display_place);
     if (props.onClickPlace) {
-      props.onClickPlace(place);
+      props.onClickPlace(place, isCurrent);
     }
   }
 
   return (
     <>
-      <SearchBar style={ inputStyle } onClickSearch={ onClickSearch }/>
+      <SearchBar
+        style={ inputStyle }
+        keyword={ keyword }
+        onChange={(e) => onChange(e)}
+        onClickSearch={ onClickSearch }
+        debounceSearch={(e) => debounceSearch(e)}
+      />
       { placeList.length !== 0 &&
         <PlaceList places={ placeList } isFetch={ isFetch } onClickPlace={ toogleClickPlace }/>
       }

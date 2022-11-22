@@ -14,7 +14,6 @@ function ChangeMapView({ coords }) {
 }
 
 const LandingPage = () => {
-  console.log('LandingPage...');
   const initialState = {
     currentSearch: [],
     lon: '51.505',
@@ -22,14 +21,17 @@ const LandingPage = () => {
   };
   const [landingState, dispatch] = useReducer(landingReducer, initialState);
 
-  const onClickPlace = (place) => {
-    console.log('==place2: ', place);
+  const onClickPlace = (place, isCurrent) => {
     dispatch({ type: 'SET_LON_LAT', lon: place.lon, lat: place.lat });
+
+    if (!isCurrent) {
+      dispatch({ type: 'ADD_TO_CURRENT_SEARCH', place });
+    }
   }
 
   return (
     <div>
-      <AutoCompleteSearchBar onClickPlace={ onClickPlace } />
+      <AutoCompleteSearchBar currentSearch={ landingState.currentSearch } onClickPlace={(place, isCurrent) => onClickPlace(place, isCurrent) } />
       <MapContainer
         style={{ height: "100vh", width: "100%" }}
         key={JSON.stringify([Number(landingState.lon), Number(landingState.lat)])}

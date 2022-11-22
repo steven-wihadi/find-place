@@ -16,6 +16,7 @@
 
 .search-bar-wrapper  button {
   margin-left: 4px;
+  cursor: pointer;
 }
 
 .search-bar-wrapper button img {

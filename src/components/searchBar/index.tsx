@@ -1,24 +1,26 @@
-import { useState } from 'react';
 import SearchIcon from '../../assets/images/search.png';
 import './style.css';
 
 let timeId: any;
 interface PropTypes {
   style?: any;
-  onClickSearch?: (keyword: string) => void;
-  // keyword: string
+  onClickSearch?: () => void;
+  onChange?: (event: string) => void;
+  debounceSearch?: (event: string) => void;
+  keyword: string
 }
 
 const Input = (props: PropTypes) => {
-  const [keyword, setKeyword] = useState('');
 
   const onChangeInput = (e: any) => {
-    setKeyword(e.target.value);
+    if (props.onChange) {
+      props.onChange(e);
+    }
 
     clearTimeout(timeId);
     timeId = setTimeout(() => {
-      if (props?.onClickSearch) {
-        props.onClickSearch(e.target.value);
+      if (props?.debounceSearch && e.target.value !== '' && e.target.value !== ' ') {
+        props.debounceSearch(e);
       }
     }, 3000);
   }
@@ -26,7 +28,7 @@ const Input = (props: PropTypes) => {
   const onClickSearch = () => {
     if (props?.onClickSearch) {
       clearTimeout(timeId);
-      props.onClickSearch(keyword);
+      props.onClickSearch();
     }
   }
 
@@ -42,11 +44,11 @@ const Input = (props: PropTypes) => {
         type='text'
         placeholder='Search a location...'
         onChange={(e) => onChangeInput(e)}
-        value={keyword}
+        value={ props.keyword }
         onKeyDown={(e) => onKeydown(e)}
       />
       <button>
-        <img src={ SearchIcon } alt='serach-btn-icon' onClick={onClickSearch}/>
+        <img src={ SearchIcon } alt='serach-btn-icon' onClick={ onClickSearch }/>
       </button>
     </div>
   );
