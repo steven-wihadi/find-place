@@ -14,6 +14,7 @@ const AutoCompleteSearchBar = (props: PropTypes) => {
   const [isFetch, setIsFetch] = useState(false);
   const [placeList, setPlaceList] = useState([]);
   const [keyword, setKeyword] = useState('');
+  const [listTitle, setListTitle] = useState('');
 
   const fetch = (query) => {
     const link = `https://api.locationiq.com/v1/autocomplete?key=pk.9b254bf7cb5be233afb04532d9b825b8&q=${query}`;
@@ -21,13 +22,13 @@ const AutoCompleteSearchBar = (props: PropTypes) => {
       const result = [];
       if (res.status === 200) {
         const data = res.data;
-        data.forEach((place, index) => {
+        data.forEach(place => {
           result.push({
             display_place: place.display_place,
             display_address: place.display_address,
             lon: place.lon,
             lat: place.lat,
-            place_id: `${place.place_id}--${index}`
+            place_id: `${place.place_id}--${new Date().getTime()}`
           });
         });
 
@@ -57,6 +58,7 @@ const AutoCompleteSearchBar = (props: PropTypes) => {
       setPlaceList([...props.currentSearch]);
     }
     isCurrent = !e.target.value ? true : false;
+    setListTitle(!e.target.value ? 'Previously on search:' : 'Search result:');
   }
 
   const toogleClickPlace = (place) => {
@@ -76,7 +78,12 @@ const AutoCompleteSearchBar = (props: PropTypes) => {
         debounceSearch={(e) => debounceSearch(e)}
       />
       { placeList.length !== 0 &&
-        <PlaceList places={ placeList } isFetch={ isFetch } onClickPlace={ toogleClickPlace }/>
+        <PlaceList
+          listTitle={ listTitle }
+          places={ placeList }
+          isFetch={ isFetch }
+          onClickPlace={ toogleClickPlace }
+        />
       }
     </>
   );

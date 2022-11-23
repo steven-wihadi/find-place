@@ -9,6 +9,7 @@ export interface Place {
 }
 
 interface PropTypes {
+  listTitle?: string;
   places: Place[];
   isFetch: boolean;
   onClickPlace?: (place: Place) => void;
@@ -24,6 +25,10 @@ const PlaceList = (props: PropTypes) => {
 
   return (
     <div className="place-list-wrapper">
+      { props.listTitle &&
+        <span className='list-title'><strong>{ props.listTitle }</strong></span>
+      }
+      
       <div className='item-wrapper'>
         { !props.isFetch &&
           props?.places.map(place =>
