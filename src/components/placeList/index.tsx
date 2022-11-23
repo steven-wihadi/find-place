@@ -1,23 +1,16 @@
+import { PlaceView } from '../../@core/entity/map.entity';
 import './style.css';
-
-export interface Place {
-  place_id: string;
-  display_place?: string;
-  display_address?: string;
-  lon: string;
-  lat: string;
-}
 
 interface PropTypes {
   listTitle?: string;
-  places: Place[];
+  places: PlaceView[];
   isFetch: boolean;
-  onClickPlace?: (place: Place) => void;
+  onClickPlace?: (place: PlaceView) => void;
 };
 
 const PlaceList = (props: PropTypes) => {
 
-  const toogleClickPlace = (place: Place) => {
+  const toogleClickPlace = (place: PlaceView) => {
     if (props.onClickPlace) {
       props.onClickPlace(place);
     }
